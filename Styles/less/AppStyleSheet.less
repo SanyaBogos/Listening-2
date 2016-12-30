@@ -1,0 +1,109 @@
+﻿@amount: 15;
+@item-width: 34px;
+
+
+.myLoop (@index) when (@index<@amount) {
+    &.edit-box-length-@{index} {
+        width: @item-width * (1 + 0.4 * (@index - 1));
+    }
+
+    .myLoop(@index+1);
+}
+
+.myLoop(1);
+
+.edit-box-word {
+    border-radius: 5px;
+    margin: 5px;
+    font-size: large;
+}
+
+.margin-top-minus-7 {
+    margin-top: -7px;
+}
+
+.margin-top-135 {
+    margin-top: 135px;
+}
+
+.margin-bottom-50 {
+    margin-bottom: 50px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.word {
+    display: inline-block;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.center-audio {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.red-bg-color {
+    background-color: red;
+}
+
+.transition-to-white-bg {
+    background-color: white;
+    transition: all;
+    transition-duration: 1.5s;
+}
+
+.full-width {
+    width: 100%;
+    text-align: left;
+}
+
+.full-max-width {
+    max-width: 100%;
+}
+
+.margin-10 {
+    margin: 10px;
+}
+
+.shift-from-top-51 {
+    margin-top: 51px;
+    background-color: white;
+}
+
+.shift-from-top-174 {
+    margin-top: 174px;
+    background-color: white;
+}
+
+.shift-from-top-375 {
+    margin-top: 375px;
+    background-color: white;
+}
+
+.width-750 {
+    max-width: 750px;
+    width: 750px;
+}
+
+.width-390 {
+    max-width: 390px;
+    width: 390px;
+}
+
+.height-200 {
+    height: 200px;
+}
+
+.sign{
+    font-size: xx-large;
+    line-height: 20px;
+    vertical-align: middle;
+}
