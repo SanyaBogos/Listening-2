@@ -20,7 +20,7 @@ namespace ListeningTest
         public ResultsRepositoryTestIntegration()
         {
             var currentDir = Directory.GetCurrentDirectory();
-            var appSettingsPath = Path.Combine(currentDir, "../listening/appsettings.json");
+            var appSettingsPath = Path.Combine(currentDir, "../Listening-2/appsettings.json");
             var builder = new ConfigurationBuilder()
                 .AddJsonFile(appSettingsPath, optional: false, reloadOnChange: true);
             var configuration = builder.Build();
