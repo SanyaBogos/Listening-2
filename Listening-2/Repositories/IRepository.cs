@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace listening.Repositories
 {
-    public interface IRepository<T>
+    public interface IRepository<T,Y>
     {
         IQueryable<T> GetAll();
-        T GetById(string id);
+        T GetById(Y id);
         void Insert(T item);
-        void Update(T intem);
-        void Delete(string itemId);
+        void Update(T item);
+        void Delete(Y itemId);
     }
 }

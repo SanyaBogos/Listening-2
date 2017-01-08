@@ -15,5 +15,6 @@ namespace listening.Models.Text
         public string SubTitle { get; set; }
         public string[][] WordsInParagraphs { get; set; }
         public string AudioName { get; set; }
+        public int SymbolsCount { get; set; }
     }
 }

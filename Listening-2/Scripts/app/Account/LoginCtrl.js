@@ -25,7 +25,7 @@
             };
 
             $scope.login = function () {
-                console.log($scope.user);
+                //console.log($scope.user);
                 AccountDataSvc.login($scope.user).then(self.successLogin, self.copyErrors);
             };
         });

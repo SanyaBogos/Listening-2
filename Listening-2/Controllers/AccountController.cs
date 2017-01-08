@@ -54,7 +54,7 @@ namespace listening.Controllers
             if (user == null)
                 throw new AuthenticationException("User was not found");
 
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            var result = await _userManager.ConfirmEmailAsync(user, code.Replace(" ", "+"));
 
             if (!result.Succeeded)
                 throw new AuthenticationException("Email verification was not successful. Ask admin for solving this issue.");
@@ -130,7 +130,7 @@ namespace listening.Controllers
                     //      visit https://go.microsoft.com/fwlink/?LinkID=532713
                     // Send an email with this link
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = $"http://{HttpContext.Request.Host}/#/confirmEmail/{user.Id}/{code}";
+                    var callbackUrl = $"http://{HttpContext.Request.Host}/#/confirmEmail/{user.Id}?code={code}";
                     //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                         $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
@@ -148,7 +148,7 @@ namespace listening.Controllers
             //Response.StatusCode = (int)HttpStatusCode.BadRequest;
             //return Json(ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage));
             throw new AuthenticationException(
-                string.Join(";\n", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage)));
+                string.Join("\n", ModelState.Values.SelectMany(x => x.Errors).Select(e => e.ErrorMessage)));
         }
 
         //

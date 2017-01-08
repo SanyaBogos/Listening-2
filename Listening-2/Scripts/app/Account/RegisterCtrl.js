@@ -2,19 +2,17 @@
     'use strict';
 
     angular.module('Account')
-        .controller('RegisterCtrl', function ($scope, $state, AccountDataSvc, CheckDataSvc) {
+        .controller('RegisterCtrl', function ($scope, $state, AccountDataSvc, CheckDataSvc, growl) {
             var self = this;
 
-            self.copyErrors = function (response) {
-                angular.copy(response.data, $scope.errorsFromServer);
+            self.catchError = function (resp) {
+                growl.error(resp.data.message.replace('\n', '<br />'));
             };
 
-            self.setUserontext = function () {
+            self.setUserContext = function () {
                 $scope.userContext.userName = $scope.user.email;
                 $state.go('home');
             };
-
-            $scope.errorsFromServer = [];
 
             $scope.user = {
                 email: '',
@@ -22,20 +20,40 @@
                 confirmPassword: ''
             };
 
+            $scope.emailError = '';
+            $scope.passwordError = '';
+            $scope.confirmPasswordError = '';
+
+            $scope.$watch('user.email', function () {
+                $scope.emailCheck();
+            });
+
+            $scope.$watch('user.password', function () {
+                $scope.passwordCheck();
+            });
+
+            $scope.$watch('user.confirmPassword', function () {
+                $scope.confirmPasswordCheck();
+            });
+
             $scope.emailCheck = function () {
-                return CheckDataSvc.emailCheck($scope.user.email);
+                $scope.emailError = CheckDataSvc.emailCheck($scope.user.email);
             };
 
             $scope.passwordCheck = function () {
-                return CheckDataSvc.passwordCheck($scope.user.password);
+                $scope.passwordError = CheckDataSvc.passwordCheck($scope.user.password);
             };
 
             $scope.confirmPasswordCheck = function () {
-                return CheckDataSvc.confirmPasswordCheck($scope.user.confirmPassword, $scope.user.password);
+                $scope.confirmPasswordError = CheckDataSvc.confirmPasswordCheck($scope.user.confirmPassword, $scope.user.password);
+            };
+
+            $scope.isRegisterDisabled = function () {
+                return !!$scope.emailError || !!$scope.passwordError || !!$scope.confirmPasswordError;
             };
 
             $scope.registryClick = function () {
-                AccountDataSvc.registry($scope.user).then(self.setUserontext, self.copyErrors);
+                AccountDataSvc.registry($scope.user).then(self.setUserContext, self.catchError);
             };
         });
 })();

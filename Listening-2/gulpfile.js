@@ -1,4 +1,4 @@
-﻿/// <binding AfterBuild='angularCompile' />
+﻿/// <binding AfterBuild='build:all' />
 "use strict";
 
 var gulp = require("gulp"),
@@ -17,6 +17,14 @@ var watch = require('gulp-watch');
 var brouserify = require('gulp-browserify');
 var less = require('gulp-less');
 var minifyCSS = require('gulp-minify-css');
+var livereload = require('gulp-livereload');
+
+var header = require('gulp-header');
+var footer = require('gulp-footer');
+var jshint = require('gulp-jshint');
+var cached = require('gulp-cached');
+var remember = require('gulp-remember');
+
 
 var paths = {
     webroot: "./wwwroot/",
@@ -73,7 +81,7 @@ gulp.task("copy:angularJs", function () {
         .pipe(gulp.dest(paths.angularDest));
 });
 
-gulp.task('templates', ['clean'], function () {
+gulp.task('templates', ['clean:angular'], function () {
     return gulp.src('Scripts/app/**/*.html')
 		.pipe(htmlmin({
 		    collapseBooleanAttributes: true,
@@ -101,7 +109,8 @@ gulp.task("angularConcat", ['templates'], function () {
     return gulp.src([paths.angularJsSrc, paths.angularDest])
         .pipe(ngAnnotate())
         .pipe(concat('app.js'))
-        .pipe(gulp.dest(paths.angularDest));
+        .pipe(gulp.dest(paths.angularDest))
+        .pipe(livereload());
 });
 
 gulp.task('min:angular', ['angularConcat'], function () {
@@ -109,7 +118,8 @@ gulp.task('min:angular', ['angularConcat'], function () {
 		.pipe(ngmin())
         .pipe(uglify({ mangle: false }))
         .pipe(rename({ suffix: '.min' }))
-		.pipe(gulp.dest(paths.angularDest));
+		.pipe(gulp.dest(paths.angularDest))
+        .pipe(livereload());
 });
 
 gulp.task("less", function () {
@@ -117,12 +127,44 @@ gulp.task("less", function () {
         .pipe(less())
         .pipe(minifyCSS())
         .pipe(rename({ suffix: '.min' }))
-        .pipe(gulp.dest(paths.lessDst));
+        .pipe(gulp.dest(paths.lessDst))
+        .pipe(livereload());
 });
+
+gulp.task("build:all", ['min:angular', 'less', 'min:css']);
 
 gulp.task("angularCompile", ["min:angular", "less", "min:css"]);
 
 gulp.task("watcher", function () {
-    //gulp.watch(paths.angularJsSrc, ["angularCopy"]);
-    gulp.watch([paths.angularJsSrc, paths.angularHtmlSrc, paths.lessSrc], ["angularCompile"]);
+    livereload.listen();
+    //gulp.watch([paths.angularJsSrc, paths.angularHtmlSrc, paths.lessSrc], ["angularCompile"]);
+    gulp.watch([paths.angularJsSrc, paths.angularHtmlSrc], ["min:angular"]);
+    gulp.watch(paths.lessSrc, ["less", "min:css"]);
+});
+
+
+// Incremental build
+gulp.task('scripts', function () {
+    return gulp.src(paths.angularJsSrc)
+        .pipe(cached('scripts'))        // only pass through changed files
+        .pipe(ngAnnotate())
+        .pipe(jshint())                 // do special things to the changed files...
+        .pipe(header('(function () {')) // e.g. jshinting ^^^
+        .pipe(footer('})();'))          // and some kind of module wrapping
+        .pipe(remember('scripts'))      // add back all files to the stream
+        .pipe(concat('app.js'))         // do things that require all files
+        .pipe(gulp.dest(paths.angularDest))
+        .pipe(livereload());
+});
+
+gulp.task('watch', function () {
+    livereload.listen();
+    var watcher = gulp.watch([paths.lessSrc, paths.angularJsSrc, paths.angularHtmlSrc],
+        ['scripts', 'less', 'min:css']); // watch the same files in our scripts task
+    watcher.on('change', function (event) {
+        if (event.type === 'deleted') {                   // if a file is deleted, forget about it
+            delete cached.caches.scripts[event.path];       // gulp-cached remove api
+            remember.forget('scripts', event.path);         // gulp-remember remove api
+        }
+    });
 });

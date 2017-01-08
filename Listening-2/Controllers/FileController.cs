@@ -36,10 +36,14 @@ namespace listening.Controllers
                     var filesInFolder = Directory.GetFiles(_path);
                     filesInFolder = filesInFolder
                         .Select(x => x.Split('/').Last()).ToArray();
-                    if (!filesInFolder.Contains(fileName))
-                        file.CopyTo(new FileStream(Path.Combine(_path, fileName), FileMode.Create));
-                    else
+
+                    if (filesInFolder.Contains(fileName))
                         throw new FileUploadException($"File with name {fileName} is already exists.");
+
+                    using (var fs = new FileStream(Path.Combine(_path, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fs);
+                    }
                 }
             }
 
@@ -57,6 +61,7 @@ namespace listening.Controllers
             else
                 throw new FileUploadException($"Can`t remove file with name {name} due to his inexistence.");
 
+            Response.StatusCode = (int)HttpStatusCode.OK;
             return Json("");
         }
     }

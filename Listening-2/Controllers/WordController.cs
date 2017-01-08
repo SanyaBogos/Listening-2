@@ -18,26 +18,29 @@ namespace listening.Controllers
     public class WordController : Controller
     {
         private readonly TextService _textService;
-        private readonly IRepository<Text> _textRepository;
+        //private readonly IRepository<Text> _textRepository;
 
-        public WordController(IRepository<Text> repository, TextService textService)
+        public WordController(/*IRepository<Text> repository, */TextService textService)
         {
-            _textRepository = repository;
+            //_textRepository = repository;
             _textService = textService;
         }
 
         [HttpGet("wordsInParagraphs/{id}")]
         public TextDto GetWordsInParagraphs(string id)
         {
-            return Mapper.Map<TextDto>(_textRepository.GetById(id));
+            return _textService.GetTextDtoById(id);
+            //return Mapper.Map<TextDto>(_textRepository.GetById(id));
         }
 
         [AllowAnonymous]
         [HttpGet("{id}")]
         public JsonResult GetWordsCountInParagraphs(string id)
         {
-            var wordsInParagraphs = _textRepository.GetById(id).WordsInParagraphs;
-            var wordsCounts = _textService.GetWordCounts(wordsInParagraphs);
+            //var wordsInParagraphs = _textRepository.GetById(id).WordsInParagraphs;
+            //var wordsCounts = _textService.GetWordCounts(wordsInParagraphs);
+            var wordsCounts = _textService.GetWordCounts(id);
+
             Response.StatusCode = (int)HttpStatusCode.OK;
             return Json(wordsCounts);
         }
@@ -47,8 +50,7 @@ namespace listening.Controllers
         public JsonResult GetLetter(string id, int paragraphIndex, int wordIndex, int symbolIndex)
         {
             Response.StatusCode = (int)HttpStatusCode.OK;
-            return Json(_textRepository.GetById(id)
-                            .WordsInParagraphs[paragraphIndex]
+            return Json(_textService.GetWordsInParagraphs(id)[paragraphIndex]
                             [wordIndex][symbolIndex]);
         }
 
@@ -58,8 +60,7 @@ namespace listening.Controllers
         {
             value = value.Replace("`", "'");
             Response.StatusCode = (int)HttpStatusCode.OK;
-            return Json(value.Equals(_textRepository.GetById(id)
-                        .WordsInParagraphs[paragraphIndex][wordIndex]));
+            return Json(value.Equals(_textService.GetWordsInParagraphs(id)[paragraphIndex][wordIndex]));
         }
 
         [AllowAnonymous]
@@ -67,7 +68,7 @@ namespace listening.Controllers
         public JsonResult PostCheckWords(string id, [FromBody]string[] words)
         {
             var formattedWords = words.Select(x => x.Replace("`", "'")).ToArray();
-            var wordsInParagraphs = _textRepository.GetById(id).WordsInParagraphs;
+            var wordsInParagraphs = _textService.GetWordsInParagraphs(id);
             var correctWordLocatorsDtoList = new List<CorrectWordLocatorsDto>();
 
             foreach (var word in formattedWords)

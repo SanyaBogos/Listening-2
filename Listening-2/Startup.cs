@@ -1,7 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using listening.Data;
+using listening.Filters;
+using listening.Models;
+using listening.Models.Text;
+using listening.Models.TextViewModels;
+using listening.Repositories;
+using listening.Services;
+using listening.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,16 +14,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using listening.Data;
-using listening.Models;
-using listening.Services;
-using AutoMapper;
-using listening.Repositories;
-using listening.Models.Text;
-using listening.Models.TextViewModels;
 using MongoDB.Bson;
-using listening.Filters;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace listening
 {
@@ -62,6 +63,7 @@ namespace listening
 
             Mapper.Initialize(x =>
             {
+                x.CreateMap<TextDto, TextCache>();
                 x.CreateMap<Text, TextDescriptionDto>();
                 x.CreateMap<TextDto, Text>()
                     .ForMember(d => d.TextId, opt => opt.MapFrom(s => ObjectId.Parse(s.TextId)))
@@ -71,7 +73,9 @@ namespace listening
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IRepository<Text>, TextsMongoRepository>();
+            services.AddSingleton<GlobalCache<TextCache, string>>();
+            services.AddSingleton<GlobalCache<Result, int>>();
+            services.AddScoped<IRepository<Text, string>, TextsMongoRepository>();
             services.AddScoped<TextService>();
             services.AddSingleton(provider => Configuration);
         }

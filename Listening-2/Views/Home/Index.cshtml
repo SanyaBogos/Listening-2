@@ -1,16 +1,15 @@
 @using System.Security.Claims
 @{
     ViewData["Title"] = "Home Page";
-    var Role = User.IsInRole("Admin") ? "a" : "";    
+    var Role = User.IsInRole("Admin") ? "a" : "";
 }
 
 <div ui-view></div>
+<div growl></div>
 
 @section scripts{
 
     <script type="text/javascript">
-        console.log('@User.Identity.Name');
-        console.log('@Role');
         var userContext = {
             userName: '@User.Identity.Name' || '',
             role: '@Role' || ''
@@ -22,7 +21,6 @@
     <script src="~/lib/angular-route/angular-route.min.js"></script>
     <script src="~/lib/angular-resource/angular-resource.min.js"></script>
     <script src="~/lib/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script src="~/lib/angular-animate/angular-animate.min.js"></script>
     <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="~/lib/ng-focus-if/focusIf.min.js"></script>
     <script src="~/lib/ng-file-upload/ng-file-upload-shim.min.js"></script>
@@ -31,10 +29,13 @@
     <script src="~/lib/angular-busy/dist/angular-busy.min.js"></script>
     <script src="~/lib/angular-aria/angular-aria.min.js"></script>
     <script src="~/lib/angular-material/angular-material.min.js"></script>
+    <script src="~/lib/angular-growl-2/build/angular-growl.min.js"></script>
+    <script src="~/lib/angular-animate/angular-animate.min.js"></script>
 }
 
 @section styles{
     <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     <link href="~/lib/angular-busy/dist/angular-busy.min.css" rel="stylesheet" />
+    <link href="~/lib/angular-growl-2/build/angular-growl.min.css" rel="stylesheet" />
     <link href="~/css/less/AppStyleSheet.min.css" rel="stylesheet" />
 }

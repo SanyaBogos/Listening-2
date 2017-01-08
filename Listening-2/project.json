@@ -1,5 +1,5 @@
 {
-  "userSecretsId": "aspnet-Listening-68fac81d-fbc4-43fc-a039-640bcd1e32fa",
+  "userSecretsId": "aspnet-listening-d6852013-0542-4d59-8965-1c82ff57f775",
 
   "dependencies": {
     "Microsoft.NETCore.App": {
@@ -50,7 +50,10 @@
     "MongoDB.Bson": "2.4.0",
     "MongoDB.Driver": "2.4.0",
     "Newtonsoft.Json": "9.0.1",
-    "NETCore.MailKit": "1.0.1"
+    "NETCore.MailKit": "1.0.1",
+    "Dapper": "1.50.2",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.1.0",
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
   },
 
   "tools": {
@@ -103,6 +106,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "Listening"
+    "defaultNamespace": "listening"
   }
 }

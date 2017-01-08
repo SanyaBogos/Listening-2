@@ -16,8 +16,8 @@
                     console.log(user);
                     return $http({ method: 'POST', url: endpoint + 'Register', data: user });
                 },
-                confirmEmail: function (params) {
-                    return $http({ method: 'GET', url: endpoint + 'ConfirmEmail?' + params });
+                confirmEmail: function (userId, code) {
+                    return $http({ method: 'GET', url: endpoint + 'ConfirmEmail', params: { userId: userId, code: code } });
                 }
             };
         });

@@ -19,7 +19,8 @@
     "ng-focus-if": "1.0.5",
     "objectid.js": "1.0.1",
     "angular-busy": "4.1.3",
-    "angular-material": "1.0.7"
+    "angular-material": "1.0.7",
+    "angular-growl-v2": "0.7.9"
   },
   "resolutions": {
     "angular": "1.5.5",

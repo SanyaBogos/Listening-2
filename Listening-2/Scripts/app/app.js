@@ -1,11 +1,13 @@
 ﻿(function () {
     'use strict';
 
+    angular.module('Utils', []);
     angular.module('Account', ['ngResource', 'ui.router']);
     angular.module('Menu', ['Account', 'ui.router']);
     angular.module('AdditionFunctionality', []);
     angular.module('Common', ['ngFileUpload']);
-    angular.module('Administration', ['ui.router', 'ngFileUpload', 'Common', 'AdditionFunctionality']);
+    angular.module('Administration', ['ui.router', 'ngFileUpload', 'Common', 'AdditionFunctionality', 'Utils', 'angular-growl',
+                                        'ngAnimate']);
     angular.module('TextForListening', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngAnimate', 'focus-if', 'Common',
                                         'AdditionFunctionality', 'cgBusy', 'ngMaterial']);
 
@@ -46,7 +48,7 @@
                     templateProvider: provide(pathAccount + 'register.html')
                 })
                 .state('confirmEmail', {
-                    url: '/confirmEmail/:userId/:code',
+                    url: '/confirmEmail/:userId',
                     controller: "ConfirmEmailCtrl",
                     templateProvider: provide(pathAccount + 'confirmEmail.html')
                 })

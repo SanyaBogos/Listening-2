@@ -24,18 +24,10 @@ namespace listening
             var pfxFile = Path.Combine(Directory.GetCurrentDirectory(), certName);
             var certificate = new X509Certificate2(pfxFile, password);
 
-#if ASPNETCORE_ENVIRONMENT == Production
-Console.WriteLine("Production aaa das ist fantastish");
-#else
-Console.WriteLine("Not Production");
-#endif
             var host = new WebHostBuilder()
                 .UseConfiguration(config)
-                // #if ASPNETCORE_ENVIRONMENT == Production
-                .UseKestrel(opt => opt.UseHttps(certificate))
-                // #else
+                // .UseKestrel(opt => opt.UseHttps(certificate))
                 .UseKestrel()
-                // #endif
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
                 .UseStartup<Startup>()
