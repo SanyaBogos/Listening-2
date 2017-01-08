@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using System.Data.SqlClient;
-using Microsoft.Data.Sqlite;
+// using Microsoft.Data.Sqlite;
 
 namespace listening.Repositories
 {
@@ -21,7 +21,8 @@ namespace listening.Repositories
 
         public void Delete(int itemId)
         {
-            using (var connection = new SqliteConnection(_connectionString))
+            // throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Execute(
                     "delete from Results where Id=@Id", new { Id = itemId });
@@ -35,7 +36,8 @@ namespace listening.Repositories
 
         public Result GetById(int id)
         {
-            using (var connection = new SqliteConnection(_connectionString))
+            // throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
             {
                 var result = connection.Query<Result>(
                     "select * from Results where Id=@Id", new { Id = id });
@@ -45,12 +47,13 @@ namespace listening.Repositories
 
         public void Insert(Result item)
         {
-            using (var connection = new SqliteConnection(_connectionString))
+            // throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
             {
-                //connection.Execute($@"INSERT INTO Results (UserId, TextId,
-                //            ResultsEncodedString, Started, Finished) 
-                //        VALUES ('{item.UserId}','{item.TextId}','{item.ResultsEncodedString}',
-                //            '{item.Started}','{item.Finished}')");
+                connection.Execute($@"INSERT INTO Results (UserId, TextId,
+                           ResultsEncodedString, Started, Finished) 
+                       VALUES ('{item.UserId}','{item.TextId}','{item.ResultsEncodedString}',
+                           '{item.Started}','{item.Finished}')");
                 connection.Execute($@"INSERT INTO Results (UserId, TextId,
                             ResultsEncodedString, Started, Finished) 
                         VALUES (@UserId, @TextId, @ResultsEncodedString, @Started, @Finished)",
@@ -61,7 +64,8 @@ namespace listening.Repositories
 
         public void Update(Result item)
         {
-            using (var connection = new SqliteConnection(_connectionString))
+            // throw new NotImplementedException();
+            using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Execute(
                     @"update Results 
